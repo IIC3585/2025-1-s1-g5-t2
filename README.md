@@ -15,7 +15,7 @@
 cargo install wasm-pack
 ```
 
-3. Navegar al directorio del proyecto:
+3. Navegar al directorio del proyecto (frontend):
 ```bash
 cd src
 ```
@@ -27,13 +27,37 @@ npm install
 
 ## Ejecutar el Proyecto
 
-Para iniciar el servidor de desarrollo:
+1. Moverse al entorno del backend-wasm:
+```bash
+cd server/t2-g5-iic3585
+```
 
+2. Construir/compilar el paquete de exportación para las funciones wasm:
+```bash
+wasm-pack build
+```
+
+3. Volver al directorio raíz:
+```bash
+cd .. && cd .. 
+```
+
+4. Moverse al entorno del frontend:
+```bash
+cd src
+```
+
+5. Instalar las dependencias:
+```bash
+npm install
+```
+
+6. Iniciar el servidor de desarrollo:
 ```bash
 npm run dev
 ```
 
-El servidor se iniciará y podrás acceder a la aplicación en tu navegador.
+El servidor se iniciará y podrás acceder a la aplicación en tu navegador, en el puerto que se indica en la terminal.
 
 ## Funcionamiento de las Funciones
 
@@ -89,49 +113,3 @@ import { apply_blur, apply_grayscale, apply_invert } from '../../server/t2-g5-ii
    // image_data: Uint8Array - Datos de la imagen en formato de bytes
    const invertedImage = apply_invert(imageData);
    ```
-
-### Ejemplo de Uso Completo
-
-```typescript
-import { useState } from 'react';
-import { apply_blur, apply_grayscale, apply_invert } from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585';
-
-function ImageProcessor() {
-  const [imageData, setImageData] = useState<Uint8Array | null>(null);
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const arrayBuffer = await file.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-    setImageData(uint8Array);
-  };
-
-  const processImage = (processor: (data: Uint8Array) => Uint8Array) => {
-    if (!imageData) return;
-    const processedData = processor(imageData);
-    // Aquí puedes mostrar la imagen procesada
-  };
-
-  return (
-    <div>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      <button onClick={() => processImage(apply_blur)}>Aplicar Blur</button>
-      <button onClick={() => processImage(apply_grayscale)}>Escala de Grises</button>
-      <button onClick={() => processImage(apply_invert)}>Invertir Colores</button>
-    </div>
-  );
-}
-```
-
-### Consideraciones Importantes
-
-1. **Formato de Datos**: Las funciones esperan los datos de la imagen en formato `Uint8Array`. Asegúrate de convertir correctamente los datos de la imagen antes de pasarlos a las funciones.
-
-2. **Rendimiento**: Las operaciones de procesamiento de imágenes pueden ser intensivas. Considera usar Web Workers para mantener la interfaz de usuario responsiva.
-
-3. **Manejo de Errores**: Implementa el manejo de errores adecuado al procesar las imágenes.
-
-4. **Visualización**: Después de procesar la imagen, necesitarás convertir los datos procesados de vuelta a un formato que pueda ser mostrado en el navegador (por ejemplo, usando `URL.createObjectURL` con un Blob).
-
