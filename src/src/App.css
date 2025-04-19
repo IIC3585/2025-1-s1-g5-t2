@@ -40,3 +40,157 @@
 .read-the-docs {
   color: #888;
 }
+
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #2c3e50;
+  --background-color: #f5f7fa;
+  --text-color: #333;
+  --border-color: #e1e4e8;
+  --hover-color: #357abd;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+}
+
+.upload-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.upload-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: var(--hover-color);
+}
+
+.image-container {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.image-preview {
+  flex: 1;
+  max-width: 500px;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview h3 {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.image-preview img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.controls {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+select {
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  color: var(--text-color);
+}
+
+.sigma-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sigma-control label {
+  color: var(--secondary-color);
+}
+
+.sigma-control input[type="range"] {
+  width: 100%;
+}
+
+.apply-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.apply-button:hover {
+  background-color: var(--hover-color);
+}
+
+@media (max-width: 768px) {
+  .image-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .image-preview {
+    width: 100%;
+  }
+}
