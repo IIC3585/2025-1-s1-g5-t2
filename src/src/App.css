@@ -248,6 +248,30 @@ select {
   gap: 1rem;
 }
 
+.use-image-button {
+  background-color: #ffffffcc;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+.carousel-image:hover .use-image-button {
+  opacity: 1;
+}
+
+.use-image-button:hover {
+  background-color: var(--hover-color);
+  color: white;
+}
+
+
 .carousel-image img {
   max-width: 300px;
   max-height: 300px;

@@ -3,13 +3,15 @@ interface SavedImagesCarouselProps {
     currentIndex: number;
     onNext: () => void;
     onPrevious: () => void;
+    onUseImage: (data: string) => void;
   }
   
   const SavedImagesCarousel = ({
     savedImages,
     currentIndex,
     onNext,
-    onPrevious
+    onPrevious,
+    onUseImage
   }: SavedImagesCarouselProps) => {
     const current = savedImages[currentIndex];
   
@@ -22,6 +24,17 @@ interface SavedImagesCarouselProps {
           </button>
           <div className="carousel-image">
             <img src={current.data} alt={`Saved ${current.id}`} />
+            <button
+              className="use-image-button"
+              onClick={() => {
+                const confirmed = window.confirm('¿Estás seguro que deseas usar esta imagen? Se perderá el progreso actual.');
+                if (confirmed) {
+                  onUseImage(current.data);
+                }
+              }}
+            >
+              Utilizar esta imagen
+            </button>
             <button
               className="download-button"
               onClick={() => {

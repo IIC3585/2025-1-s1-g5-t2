@@ -89,6 +89,11 @@ function App() {
           currentIndex={currentImageIndex}
           onNext={handleNextImage}
           onPrevious={handlePreviousImage}
+          onUseImage={(img) => {
+            setOriginalImage(img);
+            resetHistory(img);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
         />
       )}
 
