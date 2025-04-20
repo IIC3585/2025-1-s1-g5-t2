@@ -119,7 +119,16 @@ function App() {
 
   const handleSaveImage = async () => {
     if (processedImage) {
+      // Save the image to IndexedDB
       await saveImage(processedImage);
+  
+      // Create a new image object with a unique ID
+      const newImage = { id: Date.now(), data: processedImage };
+  
+      // Prepend the new image to the savedImages array and set it as the first image in the carousel
+      setSavedImages((prevImages) => [newImage, ...prevImages]);
+      setCurrentImageIndex(0); // Show the newly saved image first
+  
       alert('Imagen guardada con éxito.');
     }
   };
