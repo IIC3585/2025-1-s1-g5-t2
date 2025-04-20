@@ -10,6 +10,7 @@ function App() {
   const [savedImages, setSavedImages] = useState<{ id: number; data: string }[]>([]);
   const [sigma, setSigma] = useState<number>(5);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // For carousel navigation
 
   // PWA Installation
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
@@ -27,6 +28,15 @@ function App() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
+  }, []);
+
+  useEffect(() => {
+    // Automatically load saved images on app start
+    const loadSavedImages = async () => {
+      const images = await getImages();
+      setSavedImages(images);
+    };
+    loadSavedImages();
   }, []);
 
   const handleInstallClick = () => {
@@ -114,10 +124,14 @@ function App() {
     }
   };
 
-  const handleLoadImages = async () => {
-    const images = await getImages();
-    setSavedImages(images);
-    console.log('Imágenes cargadas:', images);
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % savedImages.length);
+  };
+
+  const handlePreviousImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? savedImages.length - 1 : prevIndex - 1
+    );
   };
 
   return (
@@ -189,28 +203,30 @@ function App() {
         </div>
       )}
 
-      {originalImage && (
-        <div className="actions">
-          <h3>Actions</h3>
-          <button className="save-button" onClick={handleSaveImage}>
-            Save Processed Image (to App)
-          </button>
-          <button className="load-button" onClick={handleLoadImages}>
-            Load Saved Images
-          </button>
-          <button
-            className="download-button"
-            onClick={() => {
-              if (processedImage) {
-                const link = document.createElement('a');
-                link.href = processedImage;
-                link.download = 'processed-image.png';
-                link.click();
-              }
-            }}
-          >
-            Download Processed Image
-          </button>
+      {savedImages.length > 0 && (
+        <div className="saved-images">
+          <h3>Saved Images</h3>
+          <div className="carousel">
+            <button onClick={handlePreviousImage}>Previous</button>
+            <div className="carousel-image">
+              <img
+                src={savedImages[currentImageIndex].data}
+                alt={`Saved ${savedImages[currentImageIndex].id}`}
+              />
+              <button
+                className="download-button"
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = savedImages[currentImageIndex].data;
+                  link.download = `saved-image-${savedImages[currentImageIndex].id}.png`;
+                  link.click();
+                }}
+              >
+                Download
+              </button>
+            </div>
+            <button onClick={handleNextImage}>Next</button>
+          </div>
         </div>
       )}
 
@@ -219,18 +235,6 @@ function App() {
           <button className="install-button" onClick={handleInstallClick}>
             Install App
           </button>
-        </div>
-      )}
-
-      {savedImages.length > 0 && (
-        <div className="saved-images">
-          <h3>Saved Images</h3>
-          <p>These are the images you saved in the app:</p>
-          <div className="image-grid">
-            {savedImages.map((image) => (
-              <img key={image.id} src={image.data} alt={`Saved ${image.id}`} />
-            ))}
-          </div>
         </div>
       )}
     </div>

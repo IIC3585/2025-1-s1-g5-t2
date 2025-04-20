@@ -1,5 +1,5 @@
 {
-    "name": "Image Filter App",
+    "name": "Image Filter",
     "short_name": "FilterApp",
     "start_url": "/",
     "display": "standalone",
