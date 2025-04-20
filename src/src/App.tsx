@@ -217,10 +217,12 @@ function App() {
       )}
 
       {savedImages.length > 0 && (
-        <div className="saved-images">
+        <div className="saved-images" style={{ marginTop: '50px' }}>
           <h3>Saved Images</h3>
           <div className="carousel">
-            <button onClick={handlePreviousImage}>Previous</button>
+            <button className="carousel-arrow left" onClick={handlePreviousImage}>
+              <span className="arrow">←</span>
+            </button>
             <div className="carousel-image">
               <img
                 src={savedImages[currentImageIndex].data}
@@ -238,7 +240,9 @@ function App() {
                 Download
               </button>
             </div>
-            <button onClick={handleNextImage}>Next</button>
+            <button className="carousel-arrow right" onClick={handleNextImage}>
+              <span className="arrow">→</span>
+            </button>
           </div>
         </div>
       )}

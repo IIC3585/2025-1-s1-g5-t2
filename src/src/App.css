@@ -105,6 +105,21 @@ body {
   background-color: var(--hover-color);
 }
 
+.download-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: var(--hover-color);
+}
+
 .image-container {
   display: flex;
   gap: 2rem;
@@ -193,4 +208,49 @@ select {
   .image-preview {
     width: 100%;
   }
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.carousel-arrow {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 2rem;
+  transition: transform 0.2s ease;
+}
+
+.carousel-arrow:hover {
+  transform: scale(1.2);
+}
+
+.carousel-arrow .arrow {
+  display: inline-block;
+  padding: 0.5rem;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.carousel-image img {
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
