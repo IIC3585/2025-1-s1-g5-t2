@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:wasm": "cd ../server/t2-g5-iic3585 && wasm-pack build",
+    "dev:full": "npm run build:wasm && npm run dev",
+    "build:full": "npm run build:wasm && npm run build"
   },
   "dependencies": {
     "idb": "^8.0.2",

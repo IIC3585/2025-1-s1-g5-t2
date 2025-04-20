@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { apply_blur, apply_grayscale, apply_invert } from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585';
+import { 
+  apply_blur,
+  apply_grayscale,
+  apply_invert,
+  apply_brighten,
+  apply_flip_horizontal,
+  apply_flip_vertical
+ } from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585';
 import { saveImage, getImages } from './indexeddb';
 
 function App() {
@@ -98,9 +105,19 @@ function App() {
           case 'invert':
             processedData = new Uint8Array(apply_invert(uint8Array, canvas.width, canvas.height));
             break;
+          case 'brighten':
+            processedData = new Uint8Array(apply_brighten(uint8Array, canvas.width, canvas.height, sigma));
+            break;
+          case 'flip_horizontal':
+            processedData = new Uint8Array(apply_flip_horizontal(uint8Array, canvas.width, canvas.height));
+            break;
+          case 'flip_vertical':
+            processedData = new Uint8Array(apply_flip_vertical(uint8Array, canvas.width, canvas.height));
+            break;
           default:
             processedData = uint8Array;
         }
+        
 
         const processedImg = new Image();
         processedImg.onload = () => {
@@ -191,6 +208,9 @@ function App() {
             <option value="blur">Blur</option>
             <option value="grayscale">Grayscale</option>
             <option value="invert">Invert Colors</option>
+            <option value="brighten">Brighten</option>
+            <option value="flip_horizontal">Flip Horizontal</option>
+            <option value="flip_vertical">Flip Vertical</option>
           </select>
 
           {selectedFilter === 'blur' && (
@@ -200,6 +220,19 @@ function App() {
                 type="range"
                 min="1"
                 max="20"
+                value={sigma}
+                onChange={(e) => setSigma(Number(e.target.value))}
+              />
+            </div>
+          )}
+
+          {selectedFilter === 'brighten' && (
+            <div className="sigma-control">
+              <label>Brightness: {sigma}</label>
+              <input
+                type="range"
+                min="-100"
+                max="100"
                 value={sigma}
                 onChange={(e) => setSigma(Number(e.target.value))}
               />
