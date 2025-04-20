@@ -1,74 +1,147 @@
-import { useState, useRef } from 'react'
-import './App.css'
-import { apply_blur, apply_grayscale, apply_invert } from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585'
+import { useState, useRef, useEffect } from 'react';
+import './App.css';
+import { apply_blur, apply_grayscale, apply_invert } from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585';
+import { saveImage, getImages } from './indexeddb';
 
 function App() {
-  const [originalImage, setOriginalImage] = useState<string | null>(null)
-  const [processedImage, setProcessedImage] = useState<string | null>(null)
-  const [selectedFilter, setSelectedFilter] = useState<string>('none')
-  const [sigma, setSigma] = useState<number>(5)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string>('none');
+  const [savedImages, setSavedImages] = useState<{ id: number; data: string }[]>([]);
+  const [sigma, setSigma] = useState<number>(5);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // For carousel navigation
+
+  // PWA Installation
+  const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault(); // Prevent automatic prompt
+      setDeferredPrompt(e);
+      setIsInstallable(true); // Enable the install button
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Automatically load saved images on app start
+    const loadSavedImages = async () => {
+      const images = await getImages();
+      setSavedImages(images);
+    };
+    loadSavedImages();
+  }, []);
+
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      (deferredPrompt as any).prompt(); // Show the install prompt
+      (deferredPrompt as any).userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        setDeferredPrompt(null); // Clear the prompt after use
+      });
+    }
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e) => {
-      setOriginalImage(e.target?.result as string)
-      setProcessedImage(e.target?.result as string)
-    }
-    reader.readAsDataURL(file)
-  }
+      setOriginalImage(e.target?.result as string);
+      setProcessedImage(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const applyFilter = () => {
-    if (!originalImage) return
+    if (!originalImage) return;
 
-    const img = new Image()
+    if (selectedFilter === 'none') {
+      setProcessedImage(originalImage);
+      return;
+    }
+
+    const img = new Image();
     img.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-      ctx.drawImage(img, 0, 0)
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      
-      // Convert ImageData to Uint8Array
-      const uint8Array = new Uint8Array(imageData.data)
-      
-      let processedData: Uint8Array
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      const uint8Array = new Uint8Array(imageData.data);
+
+      let processedData: Uint8Array;
       try {
         switch (selectedFilter) {
           case 'blur':
-            processedData = new Uint8Array(apply_blur(uint8Array, canvas.width, canvas.height, sigma))
-            break
+            processedData = new Uint8Array(apply_blur(uint8Array, canvas.width, canvas.height, sigma));
+            break;
           case 'grayscale':
-            processedData = new Uint8Array(apply_grayscale(uint8Array, canvas.width, canvas.height))
-            break
+            processedData = new Uint8Array(apply_grayscale(uint8Array, canvas.width, canvas.height));
+            break;
           case 'invert':
-            processedData = new Uint8Array(apply_invert(uint8Array, canvas.width, canvas.height))
-            break
+            processedData = new Uint8Array(apply_invert(uint8Array, canvas.width, canvas.height));
+            break;
           default:
-            processedData = uint8Array
+            processedData = uint8Array;
         }
 
-        // Create a new image from the processed data
-        const processedImg = new Image()
+        const processedImg = new Image();
         processedImg.onload = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height)
-          ctx.drawImage(processedImg, 0, 0)
-          setProcessedImage(canvas.toDataURL())
-        }
-        processedImg.src = URL.createObjectURL(new Blob([processedData], { type: 'image/png' }))
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(processedImg, 0, 0);
+          setProcessedImage(canvas.toDataURL());
+        };
+        processedImg.src = URL.createObjectURL(new Blob([processedData], { type: 'image/png' }));
       } catch (error) {
-        console.error('Error applying filter:', error)
-        alert('Error applying filter. Please try again with a different image or filter.')
+        console.error('Error applying filter:', error);
+        alert('Error applying filter. Please try again with a different image or filter.');
       }
+    };
+    img.src = originalImage;
+  };
+
+  const handleSaveImage = async () => {
+    if (processedImage) {
+      // Save the image to IndexedDB
+      await saveImage(processedImage);
+  
+      // Create a new image object with a unique ID
+      const newImage = { id: Date.now(), data: processedImage };
+  
+      // Prepend the new image to the savedImages array and set it as the first image in the carousel
+      setSavedImages((prevImages) => [newImage, ...prevImages]);
+      setCurrentImageIndex(0); // Show the newly saved image first
+  
+      alert('Imagen guardada con éxito.');
     }
-    img.src = originalImage
-  }
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % savedImages.length);
+  };
+
+  const handlePreviousImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? savedImages.length - 1 : prevIndex - 1
+    );
+  };
 
   return (
     <div className="app-container">
@@ -109,6 +182,7 @@ function App() {
 
       {originalImage && (
         <div className="controls">
+          <h3>Filters</h3>
           <select
             value={selectedFilter}
             onChange={(e) => setSelectedFilter(e.target.value)}
@@ -135,10 +209,49 @@ function App() {
           <button className="apply-button" onClick={applyFilter}>
             Apply Filter
           </button>
+
+          <button className="save-button" onClick={handleSaveImage}>
+            Save Image
+          </button>
+        </div>
+      )}
+
+      {savedImages.length > 0 && (
+        <div className="saved-images">
+          <h3>Saved Images</h3>
+          <div className="carousel">
+            <button onClick={handlePreviousImage}>Previous</button>
+            <div className="carousel-image">
+              <img
+                src={savedImages[currentImageIndex].data}
+                alt={`Saved ${savedImages[currentImageIndex].id}`}
+              />
+              <button
+                className="download-button"
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = savedImages[currentImageIndex].data;
+                  link.download = `saved-image-${savedImages[currentImageIndex].id}.png`;
+                  link.click();
+                }}
+              >
+                Download
+              </button>
+            </div>
+            <button onClick={handleNextImage}>Next</button>
+          </div>
+        </div>
+      )}
+
+      {isInstallable && (
+        <div className="install-section">
+          <button className="install-button" onClick={handleInstallClick}>
+            Install App
+          </button>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
