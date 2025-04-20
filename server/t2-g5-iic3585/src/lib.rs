@@ -52,3 +52,24 @@ pub fn apply_invert(image_data: &[u8], width: u32, height: u32) -> Vec<u8> {
     img.invert();
     encode_image_to_vec(img)
 }
+
+#[wasm_bindgen]
+pub fn apply_brighten(image_data: &[u8], width: u32, height: u32, value: i32) -> Vec<u8> {
+    let img = rgba_to_image(width, height, image_data);
+    let bright = img.brighten(value);
+    encode_image_to_vec(bright)
+}
+
+#[wasm_bindgen]
+pub fn apply_flip_horizontal(image_data: &[u8], width: u32, height: u32) -> Vec<u8> {
+    let img = rgba_to_image(width, height, image_data);
+    let flipped = img.fliph();
+    encode_image_to_vec(flipped)
+}
+
+#[wasm_bindgen]
+pub fn apply_flip_vertical(image_data: &[u8], width: u32, height: u32) -> Vec<u8> {
+    let img = rgba_to_image(width, height, image_data);
+    let flipped = img.flipv();
+    encode_image_to_vec(flipped)
+}
