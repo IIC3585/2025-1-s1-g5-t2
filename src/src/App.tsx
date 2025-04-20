@@ -200,6 +200,10 @@ function App() {
           <button className="apply-button" onClick={applyFilter}>
             Apply Filter
           </button>
+
+          <button className="save-button" onClick={handleSaveImage}>
+            Save Image
+          </button>
         </div>
       )}
 
