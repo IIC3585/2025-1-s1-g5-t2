@@ -14,10 +14,12 @@ interface SavedImagesCarouselProps {
     const current = savedImages[currentIndex];
   
     return (
-      <div className="saved-images">
+      <div className="saved-images" style={{ marginTop: '50px' }}>
         <h3>Saved Images</h3>
         <div className="carousel">
-          <button onClick={onPrevious}>Previous</button>
+          <button className="carousel-arrow left" onClick={onPrevious}>
+            <span className="arrow">←</span>
+          </button>
           <div className="carousel-image">
             <img src={current.data} alt={`Saved ${current.id}`} />
             <button
@@ -32,7 +34,9 @@ interface SavedImagesCarouselProps {
               Download
             </button>
           </div>
-          <button onClick={onNext}>Next</button>
+          <button className="carousel-arrow right" onClick={onNext}>
+            <span className="arrow">→</span>
+          </button>
         </div>
       </div>
     );

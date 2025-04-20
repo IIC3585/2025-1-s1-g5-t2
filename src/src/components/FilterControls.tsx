@@ -5,6 +5,8 @@ interface FilterControlsProps {
     onSigmaChange: (value: number) => void;
     onApply: () => void;
     onSave: () => void;
+    onUndo: () => void;
+    canUndo: boolean;
   }
   
   const FilterControls = ({
@@ -13,7 +15,9 @@ interface FilterControlsProps {
     onFilterChange,
     onSigmaChange,
     onApply,
-    onSave
+    onSave,
+    onUndo,
+    canUndo
   }: FilterControlsProps) => {
     return (
       <div className="controls">
@@ -63,6 +67,10 @@ interface FilterControlsProps {
   
         <button className="save-button" onClick={onSave}>
           Save Image
+        </button>
+
+        <button className="undo-button" onClick={onUndo} disabled={!canUndo}>
+          Undo
         </button>
       </div>
     );

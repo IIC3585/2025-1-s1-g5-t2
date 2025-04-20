@@ -20,7 +20,7 @@ import { usePWAInstall } from './hooks/usePWAInstall';
 
 function App() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
-  const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>('none');
   const [savedImages, setSavedImages] = useState<{ id: number; data: string }[]>([]);
   const [sigma, setSigma] = useState<number>(5);
@@ -28,8 +28,10 @@ function App() {
 
   const { isInstallable, install } = usePWAInstall();
 
+  const processedImage = history[history.length - 1] || null;
+
+  // Load saved images from IndexedDB when the component mounts
   useEffect(() => {
-    // Automatically load saved images on app start
     const loadSavedImages = async () => {
       const images = await getImages();
       setSavedImages(images);
@@ -37,15 +39,8 @@ function App() {
     loadSavedImages();
   }, []);
 
-
-
   const applyFilter = () => {
-    if (!originalImage) return;
-
-    if (selectedFilter === 'none') {
-      setProcessedImage(originalImage);
-      return;
-    }
+    if (!processedImage) return;
 
     const img = new Image();
     img.onload = () => {
@@ -90,7 +85,8 @@ function App() {
         processedImg.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(processedImg, 0, 0);
-          setProcessedImage(canvas.toDataURL());
+          const newImage = canvas.toDataURL();
+          setHistory((prevHistory) => [...prevHistory, newImage]);
         };
         processedImg.src = URL.createObjectURL(new Blob([processedData], { type: 'image/png' }));
       } catch (error) {
@@ -98,8 +94,16 @@ function App() {
         alert('Error applying filter. Please try again with a different image or filter.');
       }
     };
-    img.src = originalImage;
+    img.src = processedImage;
   };
+
+  const undoLast = () => {
+    if (history.length > 1) {
+      setHistory((prevHistory) => prevHistory.slice(0, -1));
+    } else {
+      alert('No hay más imágenes para deshacer.');
+    }
+  }
 
   const handleSaveImage = async () => {
     if (processedImage) {
@@ -133,7 +137,7 @@ function App() {
 
       <UploadSection onUpload={(img) => {
         setOriginalImage(img);
-        setProcessedImage(img);
+        setHistory([img]);
       }} />
 
       {originalImage && (
@@ -148,6 +152,8 @@ function App() {
           onSigmaChange={setSigma}
           onApply={applyFilter}
           onSave={handleSaveImage}
+          onUndo={undoLast}
+          canUndo={history.length > 1}
         />
       )}
 
