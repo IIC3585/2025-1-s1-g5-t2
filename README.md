@@ -1,5 +1,7 @@
 # 2025-1-s1-g5-t2
 
+![Deploy](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml/badge.svg)
+
 ## Requisitos Previos
 
 - [Rust](https://www.rust-lang.org/tools/install)
