@@ -4,7 +4,7 @@ const BASE_PATH = '/2025-1-s1-g5-t2';
 const urlsToCache = [
   `${BASE_PATH}/`,
   `${BASE_PATH}/index.html`,
-  `${BASE_PATH}/vite.svg`,
+  `${BASE_PATH}/icons/icon.png`,
   `${BASE_PATH}/manifest.json`
 ];
 
