@@ -206,8 +206,9 @@ select {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .carousel-image-wrapper {
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1 / 1;
   background: transparent;
   border-radius: 4px;
   overflow: hidden;
@@ -215,6 +216,7 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .carousel-image-wrapper:hover img {
