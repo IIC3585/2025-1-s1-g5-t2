@@ -6,6 +6,14 @@
 
 [![Deploy status](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml/badge.svg)](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml)
 
+## Usar la aplicación en iOS
+
+Debido a que `beforeinstallprompt` no se triggerea en celulares **iOS**, se debe abrir desde [safari](https://www.apple.com/cl/safari/) y llevar a cabo los siguientes pasos:
+
+1. Compartir la página
+2. Seleccionar `Agregar a inicio`
+3. Acceder a la aplicación desde FilterApp
+
 ## Requisitos Previos Prueba Local
 
 - [Rust](https://www.rust-lang.org/tools/install)
