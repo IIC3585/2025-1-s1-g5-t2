@@ -25,36 +25,22 @@ cd src
 npm install
 ```
 
-## Ejecutar el Proyecto
+## Ejecutar el Proyecto en Local
 
-1. Moverse al entorno del backend-wasm:
+1. Desde la carpeta principal, habilitar el comando de ejecución:
 ```bash
-cd server/t2-g5-iic3585
+chmod +x build.sh
 ```
 
-2. Construir/compilar el paquete de exportación para las funciones wasm:
+2. Construir/compilar el paquete de exportación para las funciones wasm y correr el servidor local:
 ```bash
-wasm-pack build
+./build.sh
 ```
 
-3. Volver al directorio raíz:
+3. Si ya lo compilaste alguna vez y no hay cambios en `lib.rs`, puedes hacer lo siguiente:
 ```bash
-cd .. && cd .. 
-```
-
-4. Moverse al entorno del frontend:
-```bash
-cd src
-```
-
-5. Instalar las dependencias:
-```bash
-npm install
-```
-
-6. Iniciar el servidor de desarrollo:
-```bash
-npm run dev
+chmod +x dev.sh
+./dev.sh
 ```
 
 El servidor se iniciará y podrás acceder a la aplicación en tu navegador, en el puerto que se indica en la terminal.
