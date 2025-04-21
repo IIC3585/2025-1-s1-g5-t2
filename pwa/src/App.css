@@ -298,3 +298,41 @@ select {
   font-size: 1rem;
   cursor: pointer;
 }
+
+@media (max-width: 480px) {
+  .carousel {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .carousel-arrow {
+    font-size: 1.5rem;
+  }
+
+  .carousel-image-wrapper {
+    max-width: 90vw;
+    aspect-ratio: auto;
+    height: auto;
+  }
+
+  .carousel-buttons {
+    position: static;
+    transform: none;
+    opacity: 1;
+    margin-top: 0.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .use-image-button,
+  .download-button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    margin: 0.2rem;
+  }
+
+  .carousel-image-wrapper:hover .carousel-buttons {
+    opacity: 1;
+  }
+}
