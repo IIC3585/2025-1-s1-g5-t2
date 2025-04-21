@@ -24,3 +24,15 @@ export async function getImages() {
   const db = await dbPromise;
   return await db.getAll(STORE_NAME);
 }
+
+export async function clearImages() {
+  const db = await dbPromise;
+  await db.clear(STORE_NAME);
+  console.log('Todas las imágenes fueron eliminadas de IndexedDB');
+}
+
+export async function deleteImage(id: number) {
+  const db = await dbPromise;
+  await db.delete(STORE_NAME, id);
+  console.log(`Imagen con ID ${id} eliminada de IndexedDB`);
+}

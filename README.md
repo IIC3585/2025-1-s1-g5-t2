@@ -6,7 +6,13 @@
 
 [![Deploy status](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml/badge.svg)](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml)
 
+## Usar la aplicación en iOS
 
+Debido a que `beforeinstallprompt` no se triggerea en celulares **iOS**, se debe abrir desde [safari](https://www.apple.com/cl/safari/) y llevar a cabo los siguientes pasos:
+
+1. Compartir la página
+2. Seleccionar `Agregar a inicio`
+3. Acceder a la aplicación desde FilterApp
 
 ## Requisitos Previos Prueba Local
 
@@ -81,29 +87,94 @@ El proyecto incluye varias funciones de procesamiento de imágenes implementadas
 
 ### Importación del Módulo
 
-Primero, importa las funciones necesarias en tu componente React:
+Primero, se importan las funciones necesarias en el componente React:
 
 ```typescript
-import { apply_blur, apply_grayscale, apply_invert } from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585';
+import { 
+  apply_blur,
+  apply_grayscale,
+  apply_invert,
+  apply_brighten,
+  apply_flip_horizontal,
+  apply_flip_vertical
+} from '../../server/t2-g5-iic3585/pkg/t2_g5_iic3585';
 ```
 
 ### Funciones Disponibles
 
+0. **Funciones auxiliares**
+
+`rgba_to_image`: Convierte un arreglo de bytes (Uint8Array) que representa píxeles en formato RGBA en una imagen manipulable, mediante la biblioteca _[image](https://docs.rs/image/latest/image/)_ de Rust.
+
+```rust
+// Mediante `ImageBuffer` crea un buffer de imagen a partir de los datos y el tamaño de la imagen. Se envuelve el buffer en un objeto `DynamicImage`, que permite manipular la imagen y lo retorna.
+
+fn rgba_to_image(width: u32, height: u32, data: &[u8]) -> DynamicImage {
+    let img_buffer = ImageBuffer::<Rgba<u8>, _>::from_raw(width, height, data.to_vec())
+        .expect("Failed to create image buffer");
+    DynamicImage::ImageRgba8(img_buffer)
+}
+```
+
+`encode_image_to_vec`: Toma una imagen dinámica (manipulable) y la vectoriza (Vector de bytes), codificándola como `png`. Es posible mutarla gracias a la estructura `Cursor` del módulo [std::io](https://doc.rust-lang.org/std/io/index.html) de Rust, que permite tratar un arreglo de bytes como si fuera un archivo.
+
+```rust
+// Mediante un buffer `Vec<u8>` vacío, almacena la imagen codificada. Escribe información sobre el buffer y lo retorna con los bytes `png` resultantes.
+
+fn encode_image_to_vec(img: DynamicImage) -> Vec<u8> {
+    let mut buffer = Vec::new();
+    img.write_to(&mut Cursor::new(&mut buffer), ImageFormat::Png)
+        .expect("Failed to encode image");
+    buffer
+}
+```
+
 1. **Aplicar Blur (Desenfoque)**
+
+Desenfoca la imagen mediante el método `blur` y un valor mayor o igual  a 0:
    ```typescript
    // image_data: Uint8Array - Datos de la imagen en formato de bytes
-   // sigma: number - Intensidad del desenfoque (mayor valor = más desenfoque)
+   // sigma: f32 - Intensidad del desenfoque (mayor valor = más desenfoque)
    const blurredImage = apply_blur(imageData, 2.0);
    ```
 
 2. **Convertir a Escala de Grises**
+
+Convierte la imagen a escala de grises mediante el método `grayscale`:
    ```typescript
    // image_data: Uint8Array - Datos de la imagen en formato de bytes
    const grayscaleImage = apply_grayscale(imageData);
    ```
 
 3. **Invertir Colores**
+
+Invierte los colores de la imagen mediante el método `invert`:
    ```typescript
    // image_data: Uint8Array - Datos de la imagen en formato de bytes
    const invertedImage = apply_invert(imageData);
+   ```
+
+4. **Modificar Brillo**
+
+Aumenta o disminuye el brillo de la imagen mediante el método `brighten` negativo o positivo:
+   ```typescript
+   // image_data: Uint8Array - Datos de la imagen en formato de bytes
+   // sigma: i32 - Intensidad del brillo (mayor valor = más brillo, puede ser negativo)
+   const invertedImage = apply_brighten(imageData, 2);
+   ```
+
+5. **Flip Horizontal**
+
+Gira la imagen sobre el eje Y, haciendo un efecto espejo, mediante el método `fliph`:
+   ```typescript
+   // image_data: Uint8Array - Datos de la imagen en formato de bytes
+   const invertedImage = apply_flip_horizontal(imageData);
+   ```
+
+6. **Flip Vertical**
+
+Gira la imagen sobre el eje X, haciendo un efecto "dado vuelta", mediante el método `flipv`:
+   ```typescript
+   // image_data: Uint8Array - Datos de la imagen en formato de bytes
+   const invertedImage = apply_flip_vertical(imageData);
    ```

@@ -34,7 +34,9 @@ function App() {
     currentIndex: currentImageIndex,
     saveImageToDB,
     next: handleNextImage,
-    previous: handlePreviousImage
+    previous: handlePreviousImage,
+    clearAllImages,
+    deleteImageFromDB
   } = useSavedImages();
   
 
@@ -80,6 +82,7 @@ function App() {
           onSave={handleSaveImage}
           onUndo={undoLast}
           canUndo={canUndo}
+          processedImage={processedImage}
         />
       )}
 
@@ -94,8 +97,33 @@ function App() {
             resetHistory(img);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
+          onDeleteImage={(id) => {
+            deleteImageFromDB(id);
+          }}
         />
       )}
+
+      <button
+        className="apply-button"
+        style={{ marginTop: '1rem' }}
+        onClick={async () => {
+          const confirmed = window.confirm('¿Estás seguro de eliminar todas las imágenes guardadas? Esto también puede borrar el caché.');
+          if (confirmed) {
+            await clearAllImages();
+
+            // Opcional: eliminar caché de service worker
+            if ('caches' in window) {
+              const cacheNames = await caches.keys();
+              await Promise.all(cacheNames.map(name => caches.delete(name)));
+              console.log('[App] Caché eliminado');
+            }
+
+            alert('Imágenes y caché eliminados correctamente.');
+          }
+        }}
+      >
+        🧹 Reiniciar caché
+      </button>
 
       {isInstallable && (
         <div className="install-section">

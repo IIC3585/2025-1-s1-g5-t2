@@ -7,6 +7,7 @@ interface FilterControlsProps {
     onSave: () => void;
     onUndo: () => void;
     canUndo: boolean;
+    processedImage?: string | null;
   }
   
   const FilterControls = ({
@@ -17,7 +18,8 @@ interface FilterControlsProps {
     onApply,
     onSave,
     onUndo,
-    canUndo
+    canUndo,
+    processedImage
   }: FilterControlsProps) => {
     return (
       <div className="controls">
@@ -72,6 +74,17 @@ interface FilterControlsProps {
         <button className="undo-button" onClick={onUndo} disabled={!canUndo}>
           Undo
         </button>
+
+        {processedImage && (
+          <a
+            href={processedImage}
+            download={`processed-image-${Date.now()}.png`}
+            className="download-button"
+            style={{ alignSelf: 'center' }}
+          >
+            Descargar Imagen
+          </a>
+        )}
       </div>
     );
   };

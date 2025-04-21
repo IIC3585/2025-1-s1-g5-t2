@@ -16,9 +16,9 @@ self.addEventListener('install', (event) => {
         console.warn('[Service Worker] Verifica si las URLs existen realmente en producción:');
         urlsToCache.forEach(url => {
           fetch(url).then(res => {
-            if (!res.ok) console.warn(`⚠️ ${url} devolvió ${res.status}`);
+            if (!res.ok) console.warn(`${url} devolvió ${res.status}`);
           }).catch(() => {
-            console.warn(`❌ ${url} no se pudo acceder`);
+            console.warn(`${url} no se pudo acceder`);
           });
         });
       });

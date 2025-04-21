@@ -82,9 +82,9 @@ body {
 }
 
 .upload-button,
-.download-button,
 .apply-button,
-.use-image-button {
+.use-image-button,
+.download-button {
   background-color: var(--primary-color);
   color: white;
   border: none;
@@ -93,6 +93,7 @@ body {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-bottom: 1rem;
 }
 
 .upload-button:hover,
@@ -205,6 +206,7 @@ select {
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .carousel-image-wrapper {
   width: 100%;
   max-width: 300px;
@@ -229,22 +231,6 @@ select {
   object-fit: contain;
   display: block;
   transition: transform 0.3s ease;
-}
-
-.use-image-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  z-index: 2;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 4px;
 }
 
 .carousel-image-wrapper:hover .use-image-button {
@@ -279,4 +265,36 @@ select {
 
 .slide-out {
   animation: slideOut 0.4s ease-in-out forwards;
+}
+
+.carousel-buttons {
+  position: absolute;
+  bottom: 10px; /* antes estaba top: 50% */
+  left: 50%;
+  transform: translateX(-50%); /* solo horizontal, no vertical */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+.carousel-image-wrapper:hover .carousel-buttons {
+  opacity: 1;
+}
+
+.use-image-button,
+.download-button {
+  opacity: 1 !important;
+  width: max-content;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
