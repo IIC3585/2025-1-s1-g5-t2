@@ -35,9 +35,9 @@ jobs:
         working-directory: src
         run: npm ci
 
-      - name: Build project
+      - name: Build project (WASM + Vite)
         working-directory: src
-        run: npm run build
+        run: npm run build:full
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
