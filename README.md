@@ -25,7 +25,7 @@ cargo install wasm-pack
 
 3. Navegar al directorio del proyecto (frontend):
 ```bash
-cd src
+cd pwa
 ```
 
 4. Instalar las dependencias de Node.js:

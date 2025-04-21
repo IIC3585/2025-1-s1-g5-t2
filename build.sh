@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd src || exit
+cd pwa || exit
 echo "🚀 Iniciando Vite Dev Server..."
-npm run dev:full
+npm run build:full
 
 # chmod +x build.sh
