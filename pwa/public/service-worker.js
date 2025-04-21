@@ -5,21 +5,27 @@ const urlsToCache = [
   `${BASE_PATH}/`,
   `${BASE_PATH}/index.html`,
   `${BASE_PATH}/vite.svg`,
-  `${BASE_PATH}/manifest.json`,
-  `${BASE_PATH}/src/index.css`,      // si es necesario
-  `${BASE_PATH}/src/App.css`,        // si es necesario
+  `${BASE_PATH}/manifest.json`
 ];
 
-// Evento de instalación: Cachear los recursos
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
+      return cache.addAll(urlsToCache).catch((error) => {
+        console.error('[Service Worker] Falló cache.addAll. Detalles:', error);
+        console.warn('[Service Worker] Verifica si las URLs existen realmente en producción:');
+        urlsToCache.forEach(url => {
+          fetch(url).then(res => {
+            if (!res.ok) console.warn(`⚠️ ${url} devolvió ${res.status}`);
+          }).catch(() => {
+            console.warn(`❌ ${url} no se pudo acceder`);
+          });
+        });
+      });
     })
   );
 });
 
-// Evento de fetch: Interceptar solicitudes y servir desde la caché
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
@@ -28,7 +34,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Evento de activación: Limpiar cachés antiguas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
