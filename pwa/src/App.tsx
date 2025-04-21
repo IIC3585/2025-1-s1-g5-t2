@@ -6,6 +6,8 @@ import UploadSection from './components/UploadSection';
 import ImagePreview from './components/ImagePreview';
 import FilterControls from './components/FilterControls';
 import SavedImagesCarousel from './components/SavedImagesCarousel';
+import { InstallPrompt } from './components/InstallPrompt';
+import { ClearCacheButton } from './components/ClearCacheButton';
 
 import { usePWAInstall } from './hooks/usePWAInstall';
 import { useImageHistory } from './hooks/useImageHistory';
@@ -103,35 +105,9 @@ function App() {
         />
       )}
 
-      <button
-        className="apply-button"
-        style={{ marginTop: '1rem' }}
-        onClick={async () => {
-          const confirmed = window.confirm('¿Estás seguro de eliminar todas las imágenes guardadas? Esto también puede borrar el caché.');
-          if (confirmed) {
-            await clearAllImages();
+      <ClearCacheButton onClearImages={clearAllImages} />
 
-            // Opcional: eliminar caché de service worker
-            if ('caches' in window) {
-              const cacheNames = await caches.keys();
-              await Promise.all(cacheNames.map(name => caches.delete(name)));
-              console.log('[App] Caché eliminado');
-            }
-
-            alert('Imágenes y caché eliminados correctamente.');
-          }
-        }}
-      >
-        🧹 Reiniciar caché
-      </button>
-
-      {isInstallable && (
-        <div className="install-section">
-          <button className="install-button" onClick={install}>
-            Install App
-          </button>
-        </div>
-      )}
+      <InstallPrompt install={install} isInstallable={isInstallable} />
 
     </div>
   );
