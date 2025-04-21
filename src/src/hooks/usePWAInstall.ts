@@ -6,6 +6,7 @@ export function usePWAInstall() {
 
   useEffect(() => {
     const handler = (e: Event) => {
+      console.log('[PWA] beforeinstallprompt triggered');
       e.preventDefault();
       setDeferredPrompt(e);
       setIsInstallable(true);
