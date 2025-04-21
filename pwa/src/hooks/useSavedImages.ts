@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getImages, saveImage } from '../indexeddb';
+import { getImages, saveImage, clearImages, deleteImage } from '../indexeddb';
 
 export function useSavedImages() {
   const [savedImages, setSavedImages] = useState<{ id: number; data: string }[]>([]);
@@ -31,11 +31,27 @@ export function useSavedImages() {
     );
   };
 
+  const clearAllImages = async () => {
+    await clearImages();
+    setSavedImages([]);
+    setCurrentIndex(0);
+  };
+
+  const deleteImageFromDB = async (id: number) => {
+    await deleteImage(id);
+    const newImages = savedImages.filter(img => img.id !== id);
+    setSavedImages(newImages);
+
+    setCurrentIndex((prev) => Math.min(prev, newImages.length - 1));
+  };
+
   return {
     savedImages,
     currentIndex,
     saveImageToDB,
     next,
-    previous
+    previous,
+    clearAllImages,
+    deleteImageFromDB
   };
 }

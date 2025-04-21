@@ -6,6 +6,7 @@ interface SavedImagesCarouselProps {
   onNext: () => void;
   onPrevious: () => void;
   onUseImage: (data: string) => void;
+  onDeleteImage: (id: number) => void;
 }
 
 const SavedImagesCarousel = ({
@@ -13,7 +14,8 @@ const SavedImagesCarousel = ({
   currentIndex,
   onNext,
   onPrevious,
-  onUseImage
+  onUseImage,
+  onDeleteImage
 }: SavedImagesCarouselProps) => {
   const [animationClass, setAnimationClass] = useState('slide-in');
   const [displayIndex, setDisplayIndex] = useState(currentIndex);
@@ -46,21 +48,47 @@ const SavedImagesCarousel = ({
             className={`carousel-image ${animationClass}`}
           />
 
-          <button
-            className="use-image-button"
-            onClick={() => {
-              const confirmed = window.confirm('¿Estás seguro que deseas usar esta imagen? Se perderá el progreso actual.');
-              if (confirmed) onUseImage(displayed.data);
-            }}
-          >
-            Utilizar esta imagen
-          </button>
+          <div className="carousel-buttons">
+            <button
+              className="use-image-button"
+              onClick={() => {
+                const confirmed = window.confirm(
+                  '¿Estás seguro que deseas usar esta imagen? Se perderá el progreso actual.'
+                );
+                if (confirmed) onUseImage(displayed.data);
+              }}
+            >
+              Utilizar esta imagen
+            </button>
+
+            <a
+              className="download-button"
+              href={displayed.data}
+              download={`saved-image-${displayed.id}.png`}
+            >
+              Descargar
+            </a>
+
+            <button
+              className="download-button"
+              onClick={() => {
+                const confirmed = window.confirm('¿Eliminar esta imagen guardada?');
+                if (confirmed) onDeleteImage(displayed.id);
+              }}
+            >
+              Eliminar
+            </button>
+          </div>
         </div>
 
         <button className="carousel-arrow right" onClick={onNext}>
           <span className="arrow">→</span>
         </button>
       </div>
+
+      <p style={{ marginTop: '0.5rem', color: '#555' }}>
+        Imagen {displayIndex + 1} de {savedImages.length}
+      </p>
     </div>
   );
 };
