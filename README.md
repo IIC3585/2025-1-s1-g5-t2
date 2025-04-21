@@ -1,12 +1,20 @@
 # 2025-1-s1-g5-t2
 
-## Requisitos Previos
+# 🚀 Go to: [Image Filter App](https://iic3585.github.io/2025-1-s1-g5-t2/)
+
+## Deploy automático activo en GitHub Pages
+
+[![Deploy status](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml/badge.svg)](https://github.com/IIC3585/2025-1-s1-g5-t2/actions/workflows/deploy-gh-pages.yml)
+
+
+
+## Requisitos Previos Prueba Local
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Node.js](https://nodejs.org/) (incluye npm)
 - [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/)
 
-## Instalación
+## Instalación Local
 
 1. Instalar Rust siguiendo las instrucciones en [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 
