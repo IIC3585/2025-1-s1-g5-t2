@@ -1,10 +1,13 @@
 const CACHE_NAME = 'app-cache-v1';
+const BASE_PATH = '/2025-1-s1-g5-t2';
+
 const urlsToCache = [
-  '/', // Página principal
-  '/index.html', // Archivo HTML principal
-  '/src/index.css', // Estilos
-  '/src/App.css', // Estilos de la app
-  '/vite.svg', // Ícono
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/vite.svg`,
+  `${BASE_PATH}/manifest.json`,
+  `${BASE_PATH}/src/index.css`,      // si es necesario
+  `${BASE_PATH}/src/App.css`,        // si es necesario
 ];
 
 // Evento de instalación: Cachear los recursos
